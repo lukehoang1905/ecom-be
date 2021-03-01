@@ -7,31 +7,25 @@ In this step, we work on Mongoose schemas and middlewares. It's worth to think a
   ```javascript
   const mongoose = require("mongoose");
   const Schema = mongoose.Schema;
-
   const productSchema = Schema(
     {
-      from: { type: Schema.ObjectId, required: true, ref: "User" },
-      to: { type: Schema.ObjectId, required: true, ref: "User" },
       name: { type: String, required: true },
-      content: { type: String, required: true },
+      description: { type: String, required: true },
       price: { type: Number, required: true },
-      image:[
-        { imageUrl:{type:String}}
-      ]
-      isDeleted: false,
+      images: [{ imageUrl: { type: String, required: true } }],
     },
-    {
-      timestamps: true,
-    }
+    { timestamp: true }
   );
+  productSchema.plugin(require("./plugins/isDeletedFalse"));
 
-  const product = mongoose.model("product", productSchema);
-  module.exports = product;
+  const product = mongoose.model("Product", productSchema);
+  module.exports = Product;
   ```
 
-  You can see that we have `isDeleted` flag which has a boolean value. The idea is we will not permanently delete the product. If user want to delete a product, we turn the `isDeleted` value to `true`. It's quite common to keep the "important" data like this example.
+  You can see that we have `isDeletedFalse` plugin. It purpose is to find if any document created without `isDeleted` and it will add `isDeleted:false` to that document.
+  The idea is we will not permanently delete the product. If user want to delete a product, we turn the `isDeleted` value to `true`. It's quite common to keep the "important" data like this example.
 
-  Then when user browse products, we only return products with `isDeleted` is `false`. To automate that we integrate a mongoose plugin for the product schema:
+  Then when user browse products, we only return products with `isDeleted` is `false`. To automate that we integrate a mongoose plugin for the product schema.
 
 - Create `models/User.js`:
 
@@ -45,13 +39,28 @@ In this step, we work on Mongoose schemas and middlewares. It's worth to think a
       email: { type: String, required: true, unique: true },
       password: { type: String, required: true },
       role: { type: String, enum: ["user", "admin"] },
-      isDeleted: false,
+      balance: { type: Number, default: 0 },
     },
     { timestamps: true }
   );
+  userSchema.plugin(require("./plugins/isDeletedFalse"));
 
   const User = mongoose.model("User", userSchema);
   module.exports = User;
+  ```
+
+- Create `models/Order.js`:
+  ```javascript
+  const orderSchema = Schema(
+    {
+      userId: { type: Schema.Types.ObjectId, ref: "User" },
+      products: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+      status: { type: String, emum: ["pending", "paid"], default: "pending" },
+      total: { type: Number, default: 0 },
+    },
+    { timestamp: true }
+  );
+  orderSchema.plugin(require("./plugins/isDeletedFalse"));
   ```
 
 ### Evaluation

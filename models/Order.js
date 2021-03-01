@@ -3,8 +3,10 @@ const Schema = mongoose.Schema;
 
 const orderSchema = Schema(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User" },
+    userId: { type: Schema.Types.ObjectId, ref: "User" },
     products: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+    status: { type: String, emum: ["pending", "paid"], default: "pending" },
+    total: { type: Number, default: 0 },
   },
   { timestamp: true }
 );

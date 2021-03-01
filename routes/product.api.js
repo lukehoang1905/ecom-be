@@ -2,31 +2,51 @@ const express = require("express");
 const router = express.Router();
 
 const productController = require("../controllers/product.controller");
+const authMiddleware = require("../middlewares/authentication");
 /**
- * @route POST api/product/
- * @description get all product
+ * @route GET api/product?page=1&limit=10
+ * @description User can see list of all products
  * @access Public
  */
-
 router.get("/", productController.getAllProducts);
+
 /**
  * @route POST api/product/add
- * @description get all product
- * @access Public
+ * @description Admin can add product
+ * @access Admin Required
  */
 
-router.get("/add", productController.addProduct);
+router.post(
+  "/add",
+  authMiddleware.loginRequired,
+  authMiddleware.adminRequired,
+  productController.addProduct
+);
+
 /**
- * @route POST api/product/update
- * @description update
- * @access Public
+ * @route PUT api/product/:id/update
+ * @description Admin can update product
+ * @access Admin required
  */
-router.get("/update", productController.updateProduct);
+router.put(
+  "/update/:id",
+  authMiddleware.loginRequired,
+  authMiddleware.adminRequired,
+  productController.updateProduct
+);
+
 /**
  * @route POST api/product/getSingleProduct
- * @description update
+ * @description get single product
  * @access Public
  */
 router.get("/:id", productController.getSingleProduct);
+
+/**
+ * @route POST api/product/getSingleProduct
+ * @description delete single product
+ * @access Public
+ */
+router.delete("/:id", productController.deleteProduct);
 
 module.exports = router;

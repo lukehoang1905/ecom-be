@@ -15,6 +15,8 @@ In the end, your project folder will look like:
 |- middlewares/
     |- authentication.js
 |- models/
+    |- plugins/
+        |- isDeletedFalse.js
     |- User.js
     |- Product.js
     |- Order.js

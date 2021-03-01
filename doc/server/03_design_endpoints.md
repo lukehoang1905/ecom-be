@@ -37,6 +37,11 @@ But if user want to add new product, they need to login and even have to be admi
  */
 ```
 
+Imagine the features we would like to have in our website, each of the function is a problem we need to solve and our endpoints are the route to its solution.
+`@route: is the request path`
+`@description: is the feature requested by frontend`
+`@access: is the authentication required for this path`
+
 Let's design our endpoints:
 
 - Create `/routes/auth.api.js`:
@@ -47,7 +52,7 @@ const router = express.Router();
 
 /**
  * @route POST api/auth/login
- * @description Login with email
+ * @description User can Login with email
  * @access Public
  */
 
@@ -60,22 +65,23 @@ module.exports = router;
 const express = require("express");
 const router = express.Router();
 
+//
 /**
- * @route PUT api/products/
- * @description Admin Update content of product
+ * @route GET api/product?page=1&limit=10
+ * @description User can see list of all products
+ * @access Public
+ */
+
+/**
+ * @route POST api/product/add
+ * @description Admin can add product
+ * @access Admin Required
+ */
+
+/**
+ * @route PUT api/product/:id/update
+ * @description Admin can update product
  * @access Admin required
- */
-
-/**
- * @route GET api/products?page=1&limit=10
- * @description User can get a list of products
- * @access Public
- */
-
-/**
- * @route GET api/products/:id
- * @description User see a product detail
- * @access Public
  */
 
 module.exports = router;
@@ -89,20 +95,65 @@ const router = express.Router();
 
 /**
  * @route POST api/users/
- * @description User can register for a new account
+ * @description User can register account
  * @access Public
  */
 
 /**
  * @route GET api/users/me
  * @description Return current user info
- * @access Access Token required
+ * @access Login required
  */
 
 /**
  * @route GET api/users/:id/order
  * @description Return list orders of current user
- * @access Public/login Required
+ * @access Login Required or Admin authorized
+ */
+
+/**
+ * @route Put api/user/:id/payment
+ * @description User can make payment
+ * @access Login required
+ */
+
+/**
+ * @route PUT api/user/:id/topup
+ * @description Top-up user balance
+ * @access Admin requied
+ */
+
+module.exports = router;
+```
+
+- Create `/routes/order.api.js`:
+
+```javascript
+const express = require("express");
+const router = express.Router();
+
+/**
+ * @route POST api/order/login
+ * @description User can create order
+ * @access Login require
+ */
+
+/**
+ * @route POST api/order/login
+ * @description User can update order
+ * @access Login require
+ */
+
+/**
+ * @route POST api/order/login
+ * @description User can see order detail
+ * @access Login required
+ */
+
+/**
+ * @route POST api/order/login
+ * @description Admin can delete order
+ * @access Admin required
  */
 
 module.exports = router;

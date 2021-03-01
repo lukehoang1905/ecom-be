@@ -6,10 +6,11 @@ const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 const userSchema = Schema(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     avatarUrl: { type: String },
-    balance: { type: Number },
+    role: { type: String, enum: ["user", "admin"] },
+    balance: { type: Number, default: 0 },
   },
   { timestamp: true }
 );
