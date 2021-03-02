@@ -7,7 +7,6 @@
 ```javascript
 const utilsHelper = require("../helpers/utils.helper");
 const bcrypt = require("bcryptjs");
-const Message = require("../models/Message");
 const User = require("../models/User");
 const userController = {};
 

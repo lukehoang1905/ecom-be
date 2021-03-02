@@ -56,13 +56,17 @@ module.exports = router;
 
 ### Authentication middleware
 
-Now we have provided an access token for every user after logging in. Next, we need to build a middleware to validate the access token in the header of the request sent by the frontend.
+Now we have provided an access token for every user after logging in. Next, we need to build 2 middlewares:
+
+- 1 : to validate the access token or user role in the header of the request sent by the frontend.
+- 2 : to validate if request meet certain conditions
 
 - Create `middlewares/authentication.js`:
 
-```jsx
+```javascript
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+const User = require("../models/User");
 
 const authMiddleware = {};
 
@@ -89,7 +93,61 @@ authMiddleware.loginRequired = (req, res, next) => {
   }
 };
 
+authMiddleware.adminRequired = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    const currentUser = await User.findById(userId);
+    const isAdmin = currentUser.role === "admin";
+
+    if (!isAdmin) return next(new Error("401- Admin required"));
+    req.isAdmin = isAdmin;
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = authMiddleware;
+```
+
+- Create `middlewares/validation.js`:
+
+```jsx
+const utilsHelper = require("../helpers/utils.helper");
+const mongoose = require("mongoose");
+// install express-validator
+const { validationResult } = require("express-validator");
+const validators = {};
+
+validators.validate = (validationArray) => async (req, res, next) => {
+  await Promise.all(validationArray.map((validation) => validation.run(req)));
+  const errors = validationResult(req);
+  if (errors.isEmpty()) return next();
+
+  // console.log(errors);
+  const extractedErrors = [];
+  errors
+    .array()
+    .map((error) => extractedErrors.push({ [error.param]: error.msg }));
+  return utilsHelper.sendResponse(
+    res,
+    422,
+    false,
+    null,
+    extractedErrors,
+    "Validation Error missing requirements"
+  );
+};
+
+validators.checkObjectId = (paramId) => {
+  if (!mongoose.Types.ObjectId.isValid(paramId)) {
+    throw new Error("Invalid ObjectId: Object id is not a mongodb Id");
+  }
+  return true;
+};
+
+module.exports = validators;
 ```
 
 Good job! [Back to instructions](/README.md)
