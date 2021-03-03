@@ -76,10 +76,9 @@ productController.updateProduct = async (req, res, next) => {
     );
     if (!product) {
       return next(
-        new AppError(
-          400,
+        new Error(
+
           "Product not found or User not authorized",
-          "Update Product Error"
         )
       );
     }
@@ -106,7 +105,7 @@ productController.getSingleProduct = async (req, res, next) => {
       true,
       { product },
       null,
-      "Update blog success"
+      "Get detail of single product success"
     );
   } catch (error) {
     next(error);
@@ -118,10 +117,10 @@ productController.deleteProduct = async (req, res, next) => {
    //SOMETHING MISSING HERE !!
     if (!product) {
       return next(
-        new AppError(
-          400,
+        new Error(
+
           "Product not found or User not authorized",
-          "DeleteProduct Error"
+
         )
       );
     }
@@ -153,7 +152,7 @@ router.post(
 
  */
 router.put(
-  "/update/:id",
+  ":id/update",
   authMiddleware.loginRequired,
   authMiddleware.adminRequired,
   productController.updateProduct

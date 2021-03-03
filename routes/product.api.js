@@ -29,7 +29,7 @@ router.post(
  * @access Admin required
  */
 router.put(
-  "/update/:id",
+  "/:id/update",
   authMiddleware.loginRequired,
   authMiddleware.adminRequired,
   productController.updateProduct

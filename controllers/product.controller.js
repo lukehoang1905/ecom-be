@@ -64,13 +64,7 @@ productController.updateProduct = async (req, res, next) => {
       { new: true }
     );
     if (!product) {
-      return next(
-        new AppError(
-          400,
-          "Product not found or User not authorized",
-          "Update Product Error"
-        )
-      );
+      return next(new Error("Product not found or User not authorized"));
     }
 
     utilsHelper.sendResponse(
@@ -91,7 +85,6 @@ productController.getSingleProduct = async (req, res, next) => {
     let product = await Product.findById(productId);
 
     if (!product) return next(new Error("Product not found"));
-    product = product.toJSON();
 
     utilsHelper.sendResponse(
       res,
@@ -99,7 +92,7 @@ productController.getSingleProduct = async (req, res, next) => {
       true,
       { product },
       null,
-      "Update blog success"
+      "Get detail of single product success"
     );
   } catch (error) {
     next(error);
@@ -109,7 +102,7 @@ productController.getSingleProduct = async (req, res, next) => {
 productController.deleteProduct = async (req, res, next) => {
   try {
     const productId = req.params.id;
-
+    // const product = await Product.findById(productId);
     const product = await Product.findOneAndUpdate(
       {
         _id: productId,
@@ -117,15 +110,19 @@ productController.deleteProduct = async (req, res, next) => {
       { isDeleted: true },
       { new: true }
     );
+
     if (!product) {
-      return next(
-        new AppError(
-          400,
-          "Product not found or User not authorized",
-          "DeleteProduct Error"
-        )
-      );
+      return next(new Error("Product not found or User not authorized"));
     }
+
+    utilsHelper.sendResponse(
+      res,
+      200,
+      true,
+      { product },
+      null,
+      "Get detail of single product success"
+    );
   } catch (error) {
     next(error);
   }

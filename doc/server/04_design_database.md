@@ -13,6 +13,7 @@ In this step, we work on Mongoose schemas and middlewares. It's worth to think a
       description: { type: String, required: true },
       price: { type: Number, required: true },
       images: [{ imageUrl: { type: String, required: true } }],
+      isDeleted: { type: Boolean, default: false },
     },
     { timestamp: true }
   );
@@ -40,6 +41,7 @@ In this step, we work on Mongoose schemas and middlewares. It's worth to think a
       password: { type: String, required: true },
       role: { type: String, enum: ["user", "admin"] },
       balance: { type: Number, default: 0 },
+      isDeleted: { type: Boolean, default: false },
     },
     { timestamps: true }
   );
@@ -50,6 +52,7 @@ In this step, we work on Mongoose schemas and middlewares. It's worth to think a
   ```
 
 - Create `models/Order.js`:
+
   ```javascript
   const orderSchema = Schema(
     {
@@ -57,6 +60,7 @@ In this step, we work on Mongoose schemas and middlewares. It's worth to think a
       products: [{ type: Schema.Types.ObjectId, ref: "Product" }],
       status: { type: String, emum: ["pending", "paid"], default: "pending" },
       total: { type: Number, default: 0 },
+      isDeleted: { type: Boolean, default: false },
     },
     { timestamp: true }
   );

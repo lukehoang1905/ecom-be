@@ -45,13 +45,7 @@ orderController.updateOrder = async (req, res, next) => {
 
     //SOMETHING MISSING HERE !!
     if (!order) {
-      return next(
-        new AppError(
-          400,
-          "order not found or User not authorized",
-          "Update order Success"
-        )
-      );
+      return next(new Error("order not found or User not authorized"));
     }
     utilsHelper.sendResponse(res, 200, true, { order }, null, "order send");
   } catch (error) {
@@ -72,13 +66,7 @@ orderController.deleteOrder = async (req, res, next) => {
       { new: true }
     );
     if (!order) {
-      return next(
-        new AppError(
-          400,
-          "order not found or User not authorized",
-          "Deleteorder Error"
-        )
-      );
+      return next(new Error("order not found or User not authorized"));
     }
   } catch (error) {
     next(error);

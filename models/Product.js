@@ -3,10 +3,11 @@ const Schema = mongoose.Schema;
 
 const productSchema = Schema(
   {
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
     description: { type: String, required: true },
     price: { type: Number, required: true },
     images: [{ imageUrl: { type: String, required: true } }],
+    isDeleted: { type: Boolean, default: false },
   },
   { timestamp: true }
 );

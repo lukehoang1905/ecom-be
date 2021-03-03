@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middlewares/authentication");
 const userController = require("../controllers/user.controller");
+
 /**
  * @route POST api/user/
  * @description User can register account
@@ -36,7 +37,6 @@ router.get(
 router.put(
   "/:id/payment",
   authMiddleware.loginRequired,
-  authMiddleware.adminRequired,
   userController.paymentUserOrder
 );
 
@@ -48,7 +48,8 @@ router.put(
 router.put(
   "/:id/topup",
   authMiddleware.loginRequired,
-  userController.paymentUserOrder
+  authMiddleware.adminRequired,
+  userController.topUpBalance
 );
 
 module.exports = router;

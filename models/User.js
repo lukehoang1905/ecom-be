@@ -9,11 +9,13 @@ const userSchema = Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     avatarUrl: { type: String },
-    role: { type: String, enum: ["user", "admin"] },
+    role: { type: String, enum: ["user", "admin"], default: "user" },
     balance: { type: Number, default: 0 },
+    isDeleted: { type: Boolean, default: false },
   },
   { timestamp: true }
 );
+userSchema.plugin(require("./plugins/isDeletedFalse"));
 
 //add a method to generateToken
 userSchema.methods.generateToken = async function () {
@@ -23,6 +25,14 @@ userSchema.methods.generateToken = async function () {
   return accessToken;
 };
 
+userSchema.methods.toJSON = function () {
+  const obj = this._doc;
+  delete obj.password;
+  delete obj.emailVerified;
+  delete obj.emailVerificationCode;
+  delete obj.isDeleted;
+  return obj;
+};
 userSchema.plugin(require("./plugins/isDeletedFalse"));
 
 const User = mongoose.model("User", userSchema);

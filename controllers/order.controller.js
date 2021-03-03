@@ -1,5 +1,6 @@
 const utilsHelper = require("../helpers/utils.helper");
 const Order = require("../models/Order");
+const Product = require("../models/Product");
 
 //order controllers
 const orderController = {};
@@ -7,11 +8,24 @@ const orderController = {};
 //Create the order
 orderController.createOrder = async (req, res, next) => {
   try {
-    const { userId, products } = req.body;
+    const userId = req.userId;
+    const { products } = req.body;
+    let total = 0;
+    const promises = products.map(async (_id) => {
+      let product = await Product.findById(_id);
+      if (!product) return Promise.reject(_id);
+      total += product.price;
+    });
+
+    await Promise.all(promises).catch((notFoundId) => {
+      return next(new Error(`403- Product Not Found ${notFoundId}`));
+    });
+
     // create Order that represent
-    const order = Order.create({
+    const order = await Order.create({
       userId,
       products,
+      total,
     });
     //
     utilsHelper.sendResponse(res, 200, true, { order }, null, "Order created");
@@ -24,7 +38,7 @@ orderController.createOrder = async (req, res, next) => {
 orderController.getDetailOrder = async (req, res, next) => {
   try {
     const orderId = req.params.id;
-    const order = Order.findById({ orderId });
+    const order = await Order.findById(orderId);
     if (!order) return next(new Error("401- Order not found"));
     utilsHelper.sendResponse(
       res,
@@ -44,21 +58,26 @@ orderController.updateOrder = async (req, res, next) => {
     const orderId = req.params.id;
     const { products } = req.body;
 
+    let total = 0;
+    const promises = products.map(async (_id) => {
+      let product = await Product.findById(_id);
+      if (!product) return Promise.reject(_id);
+      total += product.price;
+    });
+
+    await Promise.all(promises).catch((notFoundId) => {
+      return next(new Error(`403- Product Not Found ${notFoundId}`));
+    });
     const order = await Order.findOneAndUpdate(
       {
         _id: orderId,
+        status: "pending",
       },
-      { products },
+      { products, total },
       { new: true }
     );
     if (!order) {
-      return next(
-        new AppError(
-          400,
-          "order not found or User not authorized",
-          "Update order Success"
-        )
-      );
+      return next(new Error("pending  order not found or User not authorized"));
     }
     utilsHelper.sendResponse(res, 200, true, { order }, null, "order send");
   } catch (error) {
@@ -79,13 +98,7 @@ orderController.deleteOrder = async (req, res, next) => {
       { new: true }
     );
     if (!order) {
-      return next(
-        new AppError(
-          400,
-          "order not found or User not authorized",
-          "Deleteorder Error"
-        )
-      );
+      return next(new Error("order not found or User not authorized"));
     }
   } catch (error) {
     next(error);
