@@ -1,6 +1,10 @@
 # Ecom-be
 
+In this project, we will walk you through the building of a basic Ecom website.
+
 ### Server side
+
+Follow the step below to start building the backend. As we are now at the last week of course, this guide will only served as a references checklist. There will be missing code, typos, and other bugs so please don't coppy the code.
 
 # Basic Features
 
@@ -22,7 +26,7 @@
 - Admin can add , edit, delete products.
 - Admin can top-up balance for user.
 
-**Project setup**
+**Project Guides**
 
 - [Setup with express-generator](/doc/server/00_setup_project.md)
 - [Project structure](/doc/server/01_project_structure.md)
