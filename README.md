@@ -33,7 +33,7 @@ Follow the step below to start building the backend. As we are now at the last w
 - [Set up](/doc/server/02_setup_app.md)
 - [Design the endpoints](/doc/server/03_design_endpoints.md)
 - [Design database schema](/doc/server/04_design_database.md)
-- [Adding Mongoose middlewares](/doc/server/05_mongoose_middlewares.md)
+- [Adding Mongoose middlewares](/doc/server/05_mongoose_middleware.md)
 - [Register User](/doc/server/06_register_user.md)
 - [Login with Email](/doc/server/07_login.md)
 - [Product APIs](/doc/server/08_product_apis.md)

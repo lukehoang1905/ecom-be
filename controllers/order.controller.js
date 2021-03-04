@@ -11,9 +11,12 @@ orderController.createOrder = async (req, res, next) => {
     const userId = req.userId;
     const { products } = req.body;
     let total = 0;
+
+    let results = [];
     const promises = products.map(async (_id) => {
       let product = await Product.findById(_id);
       if (!product) return Promise.reject(_id);
+      results.push(product);
       total += product.price;
     });
 
@@ -24,7 +27,7 @@ orderController.createOrder = async (req, res, next) => {
     // create Order that represent
     const order = await Order.create({
       userId,
-      products,
+      products: results,
       total,
     });
     //
@@ -87,19 +90,30 @@ orderController.updateOrder = async (req, res, next) => {
 //
 
 //delete order
-orderController.deleteOrder = async (req, res, next) => {
+orderController.getAllOrder = async (req, res, next) => {
   try {
-    const orderId = req.params.id;
-    const order = await Order.findOneAndUpdate(
-      {
-        _id: orderId,
-      },
-      { isDeleted: true },
-      { new: true }
+    let { page, limit, sortBy, ...filter } = { ...req.query };
+
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 10;
+
+    const totalOrders = await Order.count({ ...filter, isDeleted: false });
+
+    const totalPages = Math.ceil(totalOrders / limit);
+    const offset = limit * (page - 1);
+
+    const orders = await Order.find({ ...filter, isDeleted: false })
+      .skip(offset)
+      .limit(limit);
+
+    utilsHelper.sendResponse(
+      res,
+      200,
+      true,
+      { orders, totalPages },
+      null,
+      "get all order"
     );
-    if (!order) {
-      return next(new Error("order not found or User not authorized"));
-    }
   } catch (error) {
     next(error);
   }

@@ -32,15 +32,15 @@ router.get(
 );
 
 /**
- * @route POST api/order/login
- * @description Admin can delete order
+ * @route GET api/order/login
+ * @description Admin can see all order
  * @access Admin required
  */
-router.delete(
-  "/:id",
+router.get(
+  "/",
   authMiddleware.loginRequired,
   authMiddleware.adminRequired,
-  orderController.getDetailOrder
+  orderController.getAllOrder
 );
 
 module.exports = router;
