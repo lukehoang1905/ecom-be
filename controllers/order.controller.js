@@ -60,11 +60,12 @@ orderController.updateOrder = async (req, res, next) => {
   try {
     const orderId = req.params.id;
     const { products } = req.body;
-
+    let results = [];
     let total = 0;
     const promises = products.map(async (_id) => {
       let product = await Product.findById(_id);
       if (!product) return Promise.reject(_id);
+      results.push(product);
       total += product.price;
     });
 
@@ -76,13 +77,13 @@ orderController.updateOrder = async (req, res, next) => {
         _id: orderId,
         status: "pending",
       },
-      { products, total },
+      { products: results, total },
       { new: true }
     );
     if (!order) {
       return next(new Error("pending  order not found or User not authorized"));
     }
-    utilsHelper.sendResponse(res, 200, true, { order }, null, "order send");
+    utilsHelper.sendResponse(res, 200, true, { results }, null, "order send");
   } catch (error) {
     next(error);
   }
