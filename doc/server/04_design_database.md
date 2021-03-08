@@ -67,14 +67,4 @@ In this step, we work on Mongoose schemas and middlewares. It's worth to think a
   orderSchema.plugin(require("./plugins/isDeletedFalse"));
   ```
 
-### Evaluation
-
-- Run `npm run dev`, you should see on the terminal:
-  ![](./images/400_server_log_1.png)
-  ...
-  ![](./images/401_server_log_2.png)
-
-- You can also find the data in the DB using Compass:
-  ![](./images/402_compass.png)
-
 Good job! [Back to instructions](/README.md)

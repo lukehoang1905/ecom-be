@@ -113,13 +113,4 @@
   module.exports = app;
   ```
 
-### Evaluation
-
-- Run `npm run dev` in the terminal
-  ![](./images/202_app_start.png)
-- Open your browser and test `http://localhost:5000/api/`:
-  ![](./images/200_get_messages.png)
-- And test `localhost:5000/whatever`:
-  ![](./images/201_not_found.png)
-
 Good job! [Back to instructions](/README.md)

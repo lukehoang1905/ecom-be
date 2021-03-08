@@ -10,7 +10,7 @@ productController.getAllProducts = async (req, res, next) => {
     page = parseInt(page) || 1;
     limit = parseInt(limit) || 10;
 
-    const totalProducts = await Product.count({ ...filter, isDeleted: false });
+    const totalProducts = await Product.count({ ...filter });
 
     const totalPages = Math.ceil(totalProducts / limit);
     const offset = limit * (page - 1);

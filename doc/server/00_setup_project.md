@@ -57,10 +57,4 @@
   res.send({ status: "ok", data: "Hello World!" });
   ```
 
-### Evaluation
-
-- Test the app: `npm run dev`, then open `localhost:5000` on the browser. You should see `{"status":"ok","data":"Hello World!"}` on the screen.
-
-![](./images/000_init.png)
-
 Good job! [Back to instructions](/README.md)

@@ -35,6 +35,18 @@ When someone log in, the system will generate a new access token for that user. 
   };
   ```
 
-  We also add `toJSON()` to remove the fields that we don't want to response to the frontend when we need to provide user info.
+- Create `/Modal/plugins/isDeletedFalse.js` :
+
+```jsx
+module.exports = exports = isDeletedFalse = function (schema, options) {
+  schema.pre(/^find/, function (next) {
+    if (this._conditions["isDeleted"] === undefined)
+      this._conditions["isDeleted"] = false;
+    next();
+  });
+};
+```
+
+We also add `toJSON()` to remove the fields that we don't want to response to the frontend when we need to provide user info.
 
 Good job! [Back to instructions](/README.md)

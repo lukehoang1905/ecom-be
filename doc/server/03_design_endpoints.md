@@ -1,7 +1,5 @@
 ## Design the endpoints
 
-In this step, we are designing REST APIs for our application. The main question is **how to apply REST principles in design process?**
-
 The very first step is identifying the objects which will be presented as resources, which are:
 
 - auth: for authentication process
